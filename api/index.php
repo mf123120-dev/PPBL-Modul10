@@ -2,7 +2,13 @@
  
 use Illuminate\Http\Request; 
  
-define('LARAVEL_START', microtime(true)); 
+define('LARAVEL_START', microtime(true));
+
+// Vercel's filesystem is read-only except /tmp: send logs to stderr so they show up in Vercel Logs.
+if (getenv('LOG_CHANNEL') === false) {
+    putenv('LOG_CHANNEL=stderr');
+    $_ENV['LOG_CHANNEL'] = $_SERVER['LOG_CHANNEL'] = 'stderr';
+}
  
 require __DIR__.'/../vendor/autoload.php'; 
  
