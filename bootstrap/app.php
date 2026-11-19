@@ -15,10 +15,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // TEMP diagnostic for Vercel, remove after fix.
-        $exceptions->render(function (\Throwable $e, $request) {
-            if ($request->header('X-Debug') === 'ppbl') {
-                return response()->json(['class' => get_class($e), 'message' => $e->getMessage(), 'db' => [config('database.default'), config('database.connections.pgsql.host'), extension_loaded('pdo_pgsql')]], 500);
-            }
-        });
+        //
     })->create();
