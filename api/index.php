@@ -4,13 +4,13 @@ use Illuminate\Http\Request;
  
 define('LARAVEL_START', microtime(true));
 
-// Defaults for Vercel; any Environment Variable set in the Vercel dashboard overrides these.
+// Fixed settings for Vercel. These override the Vercel dashboard (which held placeholder values).
 // DB_PASSWORD is secret and must be set in Vercel (the repo is public).
-$defaults = [
+$fixed = [
     'LOG_CHANNEL' => 'stderr', // filesystem is read-only except /tmp
     'APP_ENV' => 'production',
     'DB_CONNECTION' => 'pgsql',
-    'DB_HOST' => 'aws-1-ap-northeast-1.pooler.supabase.com',
+    'DB_HOST' => 'aws-1-ap-northeast-1.pooler.supabase.com', // Supabase session pooler (IPv4)
     'DB_PORT' => '5432',
     'DB_DATABASE' => 'postgres',
     'DB_USERNAME' => 'postgres.xhnpnoywrfrioymzapsh',
@@ -18,15 +18,9 @@ $defaults = [
     'SESSION_DRIVER' => 'array',
     'CACHE_STORE' => 'array',
 ];
-foreach ($defaults as $key => $value) {
-    $current = getenv($key);
-    if ($current === false || trim($current) === '') {
-        putenv("$key=$value");
-        $_ENV[$key] = $_SERVER[$key] = $value;
-    } elseif ($current !== trim($current)) {
-        putenv("$key=".trim($current));
-        $_ENV[$key] = $_SERVER[$key] = trim($current);
-    }
+foreach ($fixed as $key => $value) {
+    putenv("$key=$value");
+    $_ENV[$key] = $_SERVER[$key] = $value;
 }
 
 if (getenv('DB_PASSWORD') === false || getenv('DB_PASSWORD') === '') {
